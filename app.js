@@ -60,3 +60,102 @@ function createBoard() {
   }
 }
 createBoard()
+
+//pacmanin başlangıç pozisyonu
+
+let pacmanCurrentIndex=490
+
+squares[pacmanCurrentIndex].classList.add('pac-man')
+
+// move pac-man
+
+function movePacman(e) {
+
+    squares[pacmanCurrentIndex].classList.remove('pac-man')
+
+
+    switch(e.keyCode)  {
+
+        case 37:
+            if(pacmanCurrentIndex % width !==0 && !squares[pacmanCurrentIndex -1].classList.contains('wall') && !squares[pacmanCurrentIndex -1].classList.contains("ghost-lair"))
+             pacmanCurrentIndex -=1
+
+             // check if pacman is in the left exit.
+             if(pacmanCurrentIndex -1 ===363) {
+                pacmanCurrentIndex = 391
+             }
+            break
+        case 38:
+            if(pacmanCurrentIndex - width >= 0 && !squares[pacmanCurrentIndex -width].classList.contains("wall") && !squares[pacmanCurrentIndex -width].classList.contains("ghost-lair")) pacmanCurrentIndex -=width
+            break
+        case 39:
+            if(pacmanCurrentIndex % width < width-1 && !squares[pacmanCurrentIndex +1].classList.contains("wall") && !squares[pacmanCurrentIndex +1].classList.contains("ghost-lair")) pacmanCurrentIndex +=1
+             
+             // check if pacman is in the right exit.
+
+             if (pacmanCurrentIndex +1 ===392) {
+                pacmanCurrentIndex= 364
+             }
+            break
+        case 40:
+            if(pacmanCurrentIndex + width < width * width && !squares[pacmanCurrentIndex + width].classList.contains("wall") && !squares[pacmanCurrentIndex +width].classList.contains("ghost-lair"))pacmanCurrentIndex +=width
+            break
+    }
+
+    squares[pacmanCurrentIndex].classList.add("pac-man")
+
+    pacDotEaten()
+    //powerPelletEaten()
+    //checkForGameOver()
+    //checkForWin()
+ 
+}
+ 
+
+document.addEventListener('keyup', movePacman) 
+
+//What happens when Pac-man eats a pac-dot
+
+function pacDotEaten () {
+    if(squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
+        score++
+        scoreDisplay.innerHTML=score
+        squares[pacmanCurrentIndex].classList.remove("pac-dot")
+
+    }
+}
+
+// Create our Ghost Template
+
+class Ghost {
+    constructor(className, startIndex, speed) {
+        this.className=className
+        this.startIndex=startIndex
+        this.speed=speed
+        this.currentIndex=startIndex
+        this.timerId=NaN
+    }
+}
+
+ghosts = [ 
+    new Ghost('blinky', 348,250),
+    new Ghost('pinky', 376, 400),
+    new Ghost('inky', 351, 300),
+    new Ghost('clyde', 379, 500) 
+]
+
+
+// draw my ghoosts onto the grid
+
+ghosts.forEach(ghost => {
+    squares[ghost.currentIndex].classList.add(ghost.className)
+    squares[ghost.currentIndex].classList.add('ghost')
+})
+
+
+// //move all the ghosts randomly
+
+// ghost.forEach(ghost => moveGhost(ghost))
+
+// //write the function to move the ghosts 
+// function moveGhost(ghost)
